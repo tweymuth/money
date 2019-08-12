@@ -1,0 +1,26 @@
+AllCops:
+  DisabledByDefault: true
+
+Bundler:
+  Enabled: true
+
+Gemspec:
+  Enabled: true
+
+Layout:
+  Enabled: true
+
+Lint:
+  Enabled: true
+
+Metrics:
+  Enabled: true
+
+Naming:
+  Enabled: true
+
+Security:
+  Enabled: true
+
+Style:
+  Enabled: true
