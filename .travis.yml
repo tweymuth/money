@@ -25,10 +25,9 @@ matrix:
   fast_finish: true
 before_install:
   - gem install bundler --version '~> 1.17'
+script: bundle exec rspec spec
 jobs:
   include:
-    - stage: test
-      script: bundle exec rspec spec
     - &code_quality
       stage: code_quality
       script: bundle exec rubocop
