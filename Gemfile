@@ -2,7 +2,8 @@ source 'https://rubygems.org'
 
 gem 'coveralls', '>= 0.8.17', require: false
 gem 'pry', require: false
-gem 'rubocop', '~> 0.74.0', require: false
+
+gem 'rubocop', '~> 0.74.0', require: false if RUBY_VERSION >= '2.3'
 
 # JSON gem no longer supports ruby < 2.0.0
 if defined?(JRUBY_VERSION)
