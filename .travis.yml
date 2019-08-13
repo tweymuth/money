@@ -32,7 +32,6 @@ jobs:
     - &code_quality
       stage: code_quality
       script: bundle exec rubocop
-    - <<: *code_quality
       rvm: 2.3.8
     - <<: *code_quality
       rvm: 2.4.6
