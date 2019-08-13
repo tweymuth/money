@@ -25,9 +25,22 @@ matrix:
   fast_finish: true
 before_install:
   - gem install bundler --version '~> 1.17'
-script:
-  - bundle exec rspec spec
-  - bundle exec rake rubocop
+jobs:
+  include:
+    - stage: test
+      script: bundle exec rspec spec
+    - stage: code_quality
+      rvm:
+       - 2.3.8
+       - 2.4.6
+       - 2.5.5
+       - 2.6.3
+       - rbx-3
+       - jruby-9.1.17.0
+       - jruby-9.2.7.0
+       - ruby-head
+       - jruby-head
+      script: bundle exec rake rubocop
 notifications:
   email:
     - semmons99@gmail.com
