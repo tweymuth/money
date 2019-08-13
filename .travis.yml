@@ -30,17 +30,16 @@ jobs:
     - stage: test
       script: bundle exec rspec spec
     - stage: code_quality
-      rvm:
-       - 2.3.8
-       - 2.4.6
-       - 2.5.5
-       - 2.6.3
-       - rbx-3
-       - jruby-9.1.17.0
-       - jruby-9.2.7.0
-       - ruby-head
-       - jruby-head
-      script: bundle exec rake rubocop
+      rvm: 2.3.8
+      rvm: 2.4.6
+      rvm: 2.5.5
+      rvm: 2.6.3
+      rvm: rbx-3
+      rvm: jruby-9.1.17.0
+      rvm: jruby-9.2.7.0
+      rvm: ruby-head
+      rvm: jruby-head
+      script: bundle exec rubocop
 notifications:
   email:
     - semmons99@gmail.com

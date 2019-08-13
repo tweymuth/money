@@ -14,8 +14,4 @@ RSpec::Core::RakeTask.new(:spec) do |t|
   t.fail_on_error = false
 end
 
-require 'rubocop/rake_task'
-
-RuboCop::RakeTask.new
-
 task default: :spec
