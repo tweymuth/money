@@ -29,17 +29,27 @@ jobs:
   include:
     - stage: test
       script: bundle exec rspec spec
-    - stage: code_quality
-      rvm: 2.3.8
-      rvm: 2.4.6
-      rvm: 2.5.5
-      rvm: 2.6.3
-      rvm: rbx-3
-      rvm: jruby-9.1.17.0
-      rvm: jruby-9.2.7.0
-      rvm: ruby-head
-      rvm: jruby-head
+    - &code_quality
+      stage: code_quality
       script: bundle exec rubocop
+    - <<: *code_quality
+      rvm: 2.3.8
+    - <<: *code_quality
+      rvm: 2.4.6
+    - <<: *code_quality
+      rvm: 2.5.5
+    - <<: *code_quality
+      rvm: 2.6.3
+    - <<: *code_quality
+      rvm: rbx-3
+    - <<: *code_quality
+      rvm: jruby-9.1.17.0
+    - <<: *code_quality
+      rvm: jruby-9.2.7.0
+    - <<: *code_quality
+      rvm: ruby-head
+    - <<: *code_quality
+      rvm: jruby-head
 notifications:
   email:
     - semmons99@gmail.com
