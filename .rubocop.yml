@@ -3,6 +3,8 @@ AllCops:
 
 Bundler:
   Enabled: true
+Bundler/DuplicatedGem:
+  Enabled: false
 
 Gemspec:
   Enabled: true
