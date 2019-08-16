@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 describe Money, "formatting" do
-
   BAR = '{ "priority": 1, "iso_code": "BAR", "iso_numeric": "840", "name": "Dollar with 4 decimal places", "symbol": "$", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, "html_entity": "$", "decimal_mark": ".", "thousands_separator": ",", "smallest_denomination": 1 }'
   INDIAN_BAR = '{ "priority": 1, "iso_code": "INDIAN_BAR", "iso_numeric": "840", "name": "Dollar with 4 decimal places", "symbol": "$", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, "html_entity": "$", "decimal_mark": ".", "thousands_separator": ",", "south_asian_number_formatting": true, "smallest_denomination": 1}'
   EU4 = '{ "priority": 1, "iso_code": "EU4", "iso_numeric": "841", "name": "Euro with 4 decimal places", "symbol": "€", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, "html_entity": "€", "decimal_mark": ",", "thousands_separator": ".", "smallest_denomination": 1 }'
@@ -36,8 +35,8 @@ describe Money, "formatting" do
       reset_i18n
       I18n.locale = :de
       I18n.backend.store_translations(
-          :de,
-          number: { currency: { format: { delimiter: ".", separator: "," } } }
+        :de,
+        number: { currency: { format: { delimiter: ".", separator: "," } } }
       )
       Money.use_i18n = false
     end
@@ -70,8 +69,8 @@ describe Money, "formatting" do
         reset_i18n
         I18n.locale = :de
         I18n.backend.store_translations(
-            :de,
-            number: { format: { delimiter: ".", separator: "," } }
+          :de,
+          number: { format: { delimiter: ".", separator: "," } }
         )
       end
 
@@ -91,8 +90,8 @@ describe Money, "formatting" do
         reset_i18n
         I18n.locale = :de
         I18n.backend.store_translations(
-            :de,
-            number: { currency: { format: { delimiter: ".", separator: "," } } }
+          :de,
+          number: { currency: { format: { delimiter: ".", separator: "," } } }
         )
       end
 
@@ -112,8 +111,8 @@ describe Money, "formatting" do
         reset_i18n
         I18n.locale = :de
         I18n.backend.store_translations(
-            :de,
-            number: { currency: { symbol: { CAD: "CAD$" } } }
+          :de,
+          number: { currency: { symbol: { CAD: "CAD$" } } }
         )
       end
 
@@ -149,7 +148,7 @@ describe Money, "formatting" do
         expect(money.format(symbol: false)).to eq "1,000"
       end
 
-      after  { I18n.locale = @_locale }
+      after { I18n.locale = @_locale }
     end
 
     it "returns the monetary value as a string" do
@@ -404,7 +403,7 @@ describe Money, "formatting" do
 
         money = Money.new(100, "EUR")
         expect(money.format(symbol: false,
-                     sign_positive: true)).to eq "+1,00"
+                            sign_positive: true)).to eq "+1,00"
       end
     end
 
@@ -420,7 +419,7 @@ describe Money, "formatting" do
 
     describe ":separator option" do
       specify "(separator: a separator string) works as documented" do
-        expect(Money.us_dollar(100).format(separator:  ",")).to eq "$1,00"
+        expect(Money.us_dollar(100).format(separator: ",")).to eq "$1,00"
       end
     end
 
@@ -481,7 +480,7 @@ describe Money, "formatting" do
           expect(Money.new(300_000, 'USD').format(thousands_separator: ".", decimal_mark: ',', drop_trailing_zeros: true)).to eq "$3.000"
         end
 
-        after { Money.use_i18n = true}
+        after { Money.use_i18n = true }
       end
     end
 
@@ -538,7 +537,7 @@ describe Money, "formatting" do
       end
 
       it "raises an ArgumentError when passed an invalid option" do
-        expect{Money.euro(0).format(symbol_position: :befor)}.to raise_error(ArgumentError)
+        expect { Money.euro(0).format(symbol_position: :befor) }.to raise_error(ArgumentError)
       end
     end
 
@@ -583,27 +582,27 @@ describe Money, "formatting" do
 
     describe ":sign_positive option" do
       specify "(sign_positive: true, sign_before_symbol: true) works as documented" do
-        expect(Money.us_dollar(      0).format(sign_positive: true, sign_before_symbol: true)).to eq "$0.00"
-        expect(Money.us_dollar( 100000).format(sign_positive: true, sign_before_symbol: true)).to eq "+$1,000.00"
+        expect(Money.us_dollar(0).format(sign_positive: true, sign_before_symbol: true)).to eq "$0.00"
+        expect(Money.us_dollar(100000).format(sign_positive: true, sign_before_symbol: true)).to eq "+$1,000.00"
         expect(Money.us_dollar(-100000).format(sign_positive: true, sign_before_symbol: true)).to eq "-$1,000.00"
       end
 
       specify "(sign_positive: true, sign_before_symbol: false) works as documented" do
-        expect(Money.us_dollar(      0).format(sign_positive: true, sign_before_symbol: false)).to eq "$0.00"
-        expect(Money.us_dollar( 100000).format(sign_positive: true, sign_before_symbol: false)).to eq "$+1,000.00"
-        expect(Money.us_dollar( 100000).format(sign_positive: true, sign_before_symbol: nil)).to eq "$+1,000.00"
+        expect(Money.us_dollar(0).format(sign_positive: true, sign_before_symbol: false)).to eq "$0.00"
+        expect(Money.us_dollar(100000).format(sign_positive: true, sign_before_symbol: false)).to eq "$+1,000.00"
+        expect(Money.us_dollar(100000).format(sign_positive: true, sign_before_symbol: nil)).to eq "$+1,000.00"
         expect(Money.us_dollar(-100000).format(sign_positive: true, sign_before_symbol: false)).to eq "$-1,000.00"
         expect(Money.us_dollar(-100000).format(sign_positive: true, sign_before_symbol: nil)).to eq "$-1,000.00"
       end
 
       specify "(sign_positive: false, sign_before_symbol: true) works as documented" do
-        expect(Money.us_dollar( 100000).format(sign_positive: false, sign_before_symbol: true)).to eq "$1,000.00"
+        expect(Money.us_dollar(100000).format(sign_positive: false, sign_before_symbol: true)).to eq "$1,000.00"
         expect(Money.us_dollar(-100000).format(sign_positive: false, sign_before_symbol: true)).to eq "-$1,000.00"
       end
 
       specify "(sign_positive: false, sign_before_symbol: false) works as documented" do
-        expect(Money.us_dollar( 100000).format(sign_positive: false, sign_before_symbol: false)).to eq "$1,000.00"
-        expect(Money.us_dollar( 100000).format(sign_positive: false, sign_before_symbol: nil)).to eq "$1,000.00"
+        expect(Money.us_dollar(100000).format(sign_positive: false, sign_before_symbol: false)).to eq "$1,000.00"
+        expect(Money.us_dollar(100000).format(sign_positive: false, sign_before_symbol: nil)).to eq "$1,000.00"
         expect(Money.us_dollar(-100000).format(sign_positive: false, sign_before_symbol: false)).to eq "$-1,000.00"
         expect(Money.us_dollar(-100000).format(sign_positive: false, sign_before_symbol: nil)).to eq "$-1,000.00"
       end
@@ -656,8 +655,8 @@ describe Money, "formatting" do
           reset_i18n
           I18n.locale = :de
           I18n.backend.store_translations(
-              :de,
-              number: { currency: { format: { delimiter: ".", separator: "," } } }
+            :de,
+            number: { currency: { format: { delimiter: ".", separator: "," } } }
           )
         end
 
@@ -772,11 +771,9 @@ describe Money, "formatting" do
       expect(Money.new(88833310034, "BAR").format).to eq "$8,883,331.0034"
       expect(Money.new(88833310034, "EU4").format).to eq "€8.883.331,0034"
     end
-
   end
 
   context "currencies with ambiguous signs" do
-
     it "returns ambiguous signs when disambiguate is not set" do
       expect(Money.new(1999_98, "USD").format).to eq("$1,999.98")
       expect(Money.new(1999_98, "CAD").format).to eq("$1,999.98")

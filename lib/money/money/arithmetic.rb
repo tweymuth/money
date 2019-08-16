@@ -55,9 +55,11 @@ class Money
     def <=>(other)
       unless other.is_a?(Money)
         return unless other.respond_to?(:zero?) && other.zero?
+
         return other.is_a?(CoercedNumeric) ? 0 <=> fractional : fractional <=> 0
       end
       return 0 if zero? && other.zero?
+
       other = other.exchange_to(currency)
       fractional <=> other.fractional
     rescue Money::Bank::UnknownRate
@@ -69,6 +71,7 @@ class Money
       if other.is_a?(Numeric) && !other.zero?
         raise ArgumentError, 'Money#== supports only zero numerics'
       end
+
       super
     end
 
@@ -135,9 +138,11 @@ class Money
           self.class.new(new_fractional, currency, bank)
         when CoercedNumeric
           raise TypeError, non_zero_message.call(other.value) unless other.zero?
+
           self.class.new(other.value.public_send(op, fractional), currency)
         when Numeric
           raise TypeError, non_zero_message.call(other) unless other.zero?
+
           self
         else
           raise TypeError, "Unsupported argument type: #{other.class.name}"
@@ -188,6 +193,7 @@ class Money
         fractional / as_d(value.exchange_to(currency).fractional).to_f
       else
         raise TypeError, 'Can not divide by Money' if value.is_a?(CoercedNumeric)
+
         self.class.new(fractional / as_d(value), currency, bank)
       end
     end

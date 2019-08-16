@@ -21,8 +21,8 @@ describe Money::LocaleBackend::I18n do
       before do
         I18n.locale = :de
         I18n.backend.store_translations(:de, number: {
-          currency: { format: { delimiter: '.', separator: ',', unit: '$' } }
-        })
+                                          currency: { format: { delimiter: '.', separator: ',', unit: '$' } }
+                                        })
       end
 
       it 'returns thousands_separator based on the current locale' do

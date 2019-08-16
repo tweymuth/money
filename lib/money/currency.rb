@@ -5,7 +5,6 @@ require "money/currency/loader"
 require "money/currency/heuristics"
 
 class Money
-
   # Represents a specific currency unit.
   #
   # @see https://en.wikipedia.org/wiki/Currency
@@ -80,6 +79,7 @@ class Money
       def find_by_iso_numeric(num)
         num = num.to_s.rjust(3, '0')
         return if num.empty?
+
         id, _ = self.table.find { |key, currency| currency[:iso_numeric] == num }
         new(id)
       rescue UnknownCurrency
@@ -136,6 +136,7 @@ class Money
           if c.priority.nil?
             raise MissingAttributeError.new(:all, c.id, :priority)
           end
+
           c
         end.sort_by(&:priority)
       end
@@ -206,7 +207,6 @@ class Money
         all.each { |c| yield(c) }
       end
 
-
       private
 
       def stringify_keys
@@ -252,8 +252,8 @@ class Money
     #     this currency)
 
     attr_reader :id, :priority, :iso_code, :iso_numeric, :name, :symbol,
-      :disambiguate_symbol, :html_entity, :subunit, :subunit_to_unit, :decimal_mark,
-      :thousands_separator, :symbol_first, :smallest_denomination
+                :disambiguate_symbol, :html_entity, :subunit, :subunit_to_unit, :decimal_mark,
+                :thousands_separator, :symbol_first, :smallest_denomination
 
     alias_method :separator, :decimal_mark
     alias_method :delimiter, :thousands_separator
@@ -427,14 +427,14 @@ class Money
 
     def initialize_data!
       data = self.class.table[@id]
-      @alternate_symbols     = data[:alternate_symbols]
-      @decimal_mark          = data[:decimal_mark]
-      @disambiguate_symbol   = data[:disambiguate_symbol]
-      @html_entity           = data[:html_entity]
-      @iso_code              = data[:iso_code]
-      @iso_numeric           = data[:iso_numeric]
-      @name                  = data[:name]
-      @priority              = data[:priority]
+      @alternate_symbols = data[:alternate_symbols]
+      @decimal_mark = data[:decimal_mark]
+      @disambiguate_symbol = data[:disambiguate_symbol]
+      @html_entity = data[:html_entity]
+      @iso_code = data[:iso_code]
+      @iso_numeric = data[:iso_numeric]
+      @name = data[:name]
+      @priority = data[:priority]
       @smallest_denomination = data[:smallest_denomination]
       @subunit               = data[:subunit]
       @subunit_to_unit       = data[:subunit_to_unit]

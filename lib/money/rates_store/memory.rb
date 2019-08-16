@@ -1,6 +1,5 @@
 class Money
   module RatesStore
-
     # Class for thread-safe storage of exchange rate pairs.
     # Used by instances of +Money::Bank::VariableExchange+.
     #
@@ -91,7 +90,7 @@ class Money
         enum = Enumerator.new do |yielder|
           index.each do |key, rate|
             iso_from, iso_to = key.split(INDEX_KEY_SEPARATOR)
-            yielder.yield iso_from, iso_to, rate                  
+            yielder.yield iso_from, iso_to, rate
           end
         end
 

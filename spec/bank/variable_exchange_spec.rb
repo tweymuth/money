@@ -2,7 +2,6 @@ require 'json'
 require 'yaml'
 
 describe Money::Bank::VariableExchange do
-
   describe "#initialize" do
     context "without &block" do
       let(:bank) {
@@ -52,12 +51,12 @@ describe Money::Bank::VariableExchange do
           expect { bank.exchange_with(Money.new(100, 'USD'), 'JPY') }.to raise_exception(Money::Bank::UnknownRate)
         end
 
-        #it "rounds the exchanged result down" do
+        # it "rounds the exchanged result down" do
         #  bank.add_rate("USD", "EUR", 0.788332676)
         #  bank.add_rate("EUR", "YEN", 122.631477)
         #  expect(bank.exchange_with(Money.new(10_00,  "USD"), "EUR")).to eq Money.new(788, "EUR")
         #  expect(bank.exchange_with(Money.new(500_00, "EUR"), "YEN")).to eq Money.new(6131573, "YEN")
-        #end
+        # end
 
         it "accepts a custom truncation method" do
           proc = Proc.new { |n| n.ceil }
@@ -183,7 +182,7 @@ describe Money::Bank::VariableExchange do
 
     context "with unknown format" do
       it "raises Money::Bank::UnknownRateFormat" do
-        expect { subject.export_rates(:foo)}.to raise_error Money::Bank::UnknownRateFormat
+        expect { subject.export_rates(:foo) }.to raise_error Money::Bank::UnknownRateFormat
       end
     end
 
@@ -201,7 +200,6 @@ describe Money::Bank::VariableExchange do
       expect(subject.store).to receive(:transaction)
       subject.export_rates(:yaml, nil, foo: 1)
     end
-
   end
 
   describe "#import_rates" do
@@ -216,7 +214,7 @@ describe Money::Bank::VariableExchange do
 
     context "with format == :ruby" do
       it "loads the rates provided" do
-        s = Marshal.dump({"USD_TO_EUR"=>1.25,"USD_TO_JPY"=>2.55})
+        s = Marshal.dump({ "USD_TO_EUR" => 1.25, "USD_TO_JPY" => 2.55 })
         subject.import_rates(:ruby, s)
         expect(subject.get_rate('USD', 'EUR')).to eq 1.25
         expect(subject.get_rate('USD', 'JPY')).to eq 2.55
@@ -234,7 +232,7 @@ describe Money::Bank::VariableExchange do
 
     context "with unknown format" do
       it "raises Money::Bank::UnknownRateFormat" do
-        expect { subject.import_rates(:foo, "")}.to raise_error Money::Bank::UnknownRateFormat
+        expect { subject.import_rates(:foo, "") }.to raise_error Money::Bank::UnknownRateFormat
       end
     end
 
@@ -243,12 +241,11 @@ describe Money::Bank::VariableExchange do
       s = "--- \nUSD_TO_EUR: 1.25\nUSD_TO_JPY: 2.55\n"
       subject.import_rates(:yaml, s, foo: 1)
     end
-
   end
 
   describe "#marshal_dump" do
     it "does not raise an error" do
-      expect {  Marshal.dump(subject) }.to_not raise_error
+      expect { Marshal.dump(subject) }.to_not raise_error
     end
 
     it "works with Marshal.load" do

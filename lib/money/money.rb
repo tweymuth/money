@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require "money/bank/variable_exchange"
 require "money/bank/single_currency"
 require "money/money/arithmetic"
@@ -89,7 +90,6 @@ class Money
 
   # Class Methods
   class << self
-
     # @!attribute [rw] default_bank
     #   @return [Money::Bank::Base] Each Money object is associated to a bank
     #     object, which is responsible for currency exchange. This property
@@ -121,8 +121,8 @@ class Money
     #   @return [Integer] Use this to specify precision for converting Rational
     #     to BigDecimal
     attr_accessor :default_bank, :default_formatting_rules,
-      :use_i18n, :infinite_precision, :conversion_precision,
-      :locale_backend
+                  :use_i18n, :infinite_precision, :conversion_precision,
+                  :locale_backend
   end
 
   # @!attribute default_currency
