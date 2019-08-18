@@ -80,7 +80,7 @@ class Money
         num = num.to_s.rjust(3, '0')
         return if num.empty?
 
-        id, _ = self.table.find { |key, currency| currency[:iso_numeric] == num }
+        id, _ = self.table.find { |_key, currency| currency[:iso_numeric] == num }
         new(id)
       rescue UnknownCurrency
         nil

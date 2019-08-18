@@ -121,8 +121,9 @@ class Money
     #   @return [Integer] Use this to specify precision for converting Rational
     #     to BigDecimal
     attr_accessor :default_bank, :default_formatting_rules,
-                  :use_i18n, :infinite_precision, :conversion_precision,
-                  :locale_backend
+                  :infinite_precision, :conversion_precision
+
+    attr_reader :locale_backend, :use_i18n
   end
 
   # @!attribute default_currency

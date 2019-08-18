@@ -106,7 +106,7 @@ class Money
         if from.currency == to_currency
           from
         else
-          if rate = get_rate(from.currency, to_currency)
+          if (rate = get_rate(from.currency, to_currency))
             fractional = calculate_fractional(from, to_currency)
             from.class.new(
               exchange(fractional, rate, &block), to_currency
@@ -124,7 +124,7 @@ class Money
         )
       end
 
-      def exchange(fractional, rate, &block)
+      def exchange(fractional, rate, &_block)
         ex = fractional * BigDecimal(rate.to_s)
         if block_given?
           yield ex
@@ -159,7 +159,7 @@ class Money
       # @param [Currency, String, Symbol] from Currency to exchange from.
       # @param [Currency, String, Symbol] to Currency to exchange to.
       # @param [Numeric] rate Rate to use when exchanging currencies.
-      # @param [Hash] opts Options hash to set special parameters. Backwards compatibility only.
+      # @param [Hash] _opts Options hash to set special parameters. Backwards compatibility only.
       #
       # @return [Numeric]
       #
@@ -167,7 +167,7 @@ class Money
       #   bank = Money::Bank::VariableExchange.new
       #   bank.set_rate("USD", "CAD", 1.24515)
       #   bank.set_rate("CAD", "USD", 0.803115)
-      def set_rate(from, to, rate, opts = {})
+      def set_rate(from, to, rate, _opts = {})
         store.add_rate(Currency.wrap(from).iso_code, Currency.wrap(to).iso_code, rate)
       end
 
@@ -177,7 +177,7 @@ class Money
       #
       # @param [Currency, String, Symbol] from Currency to exchange from.
       # @param [Currency, String, Symbol] to Currency to exchange to.
-      # @param [Hash] opts Options hash to set special parameters. Backwards compatibility only.
+      # @param [Hash] _opts Options hash to set special parameters. Backwards compatibility only.
       #
       # @return [Numeric]
       #
@@ -188,7 +188,7 @@ class Money
       #
       #   bank.get_rate("USD", "CAD") #=> 1.24515
       #   bank.get_rate("CAD", "USD") #=> 0.803115
-      def get_rate(from, to, opts = {})
+      def get_rate(from, to, _opts = {})
         store.get_rate(Currency.wrap(from).iso_code, Currency.wrap(to).iso_code)
       end
 
@@ -198,7 +198,7 @@ class Money
       #
       # @param [Symbol] format Request format for the resulting string.
       # @param [String] file Optional file location to write the rates to.
-      # @param [Hash] opts Options hash to set special parameters. Backwards compatibility only.
+      # @param [Hash] _opts Options hash to set special parameters. Backwards compatibility only.
       #
       # @return [String]
       #
@@ -211,7 +211,7 @@ class Money
       #
       #   s = bank.export_rates(:json)
       #   s #=> "{\"USD_TO_CAD\":1.24515,\"CAD_TO_USD\":0.803115}"
-      def export_rates(format, file = nil, opts = {})
+      def export_rates(format, file = nil, _opts = {})
         raise Money::Bank::UnknownRateFormat unless
           RATE_FORMATS.include? format
 
@@ -239,7 +239,7 @@ class Money
       #
       # @param [Symbol] format The format of +s+.
       # @param [String] s The rates string.
-      # @param [Hash] opts Options hash to set special parameters. Backwards compatibility only.
+      # @param [Hash] _opts Options hash to set special parameters. Backwards compatibility only.
       #
       # @return [self]
       #
@@ -252,7 +252,7 @@ class Money
       #
       #   bank.get_rate("USD", "CAD") #=> 1.24515
       #   bank.get_rate("CAD", "USD") #=> 0.803115
-      def import_rates(format, s, opts = {})
+      def import_rates(format, s, _opts = {})
         raise Money::Bank::UnknownRateFormat unless
           RATE_FORMATS.include? format
 

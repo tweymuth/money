@@ -87,8 +87,8 @@ class Money
       #
       # @raise NotImplementedError
       #
-      # @param [Money] from The +Money+ object to exchange from.
-      # @param [Money::Currency, String, Symbol] to_currency The currency
+      # @param [Money] _from The +Money+ object to exchange from.
+      # @param [Money::Currency, String, Symbol] _to_currency The currency
       #  string or object to exchange to.
       # @yield [n] Optional block to use to round the result after making
       #  the exchange.
@@ -97,7 +97,7 @@ class Money
       # @yieldreturn [Integer]
       #
       # @return [Money]
-      def exchange_with(from, to_currency, &block)
+      def exchange_with(_from, _to_currency, &_block)
         raise NotImplementedError, "#exchange_with must be implemented"
       end
 

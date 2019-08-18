@@ -299,7 +299,7 @@ class Money
           .gsub('%u', [sign_before, symbol_value].join)
           .gsub('%n', [sign, formatted_number].join)
       else
-        formatted_number = "#{sign_before}#{sign}#{formatted_number}"
+        "#{sign_before}#{sign}#{formatted_number}"
       end
     end
 
@@ -308,7 +308,7 @@ class Money
         formatted_number << " "
 
         if rules[:html]
-          formatted_number << "<span class=\"currency\">#{currency.to_s}</span>"
+          formatted_number << "<span class=\"currency\">#{currency}</span>"
         elsif rules[:html_wrap]
           formatted_number << html_wrap(currency.to_s, "currency")
         else

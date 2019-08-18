@@ -14,6 +14,8 @@ Layout:
 
 Lint:
   Enabled: true
+Lint/HandleExceptions:
+  AllowComments: true
 
 Metrics:
   Enabled: true

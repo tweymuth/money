@@ -15,7 +15,7 @@ class Money
     class SingleCurrency < Base
       # Raises a DifferentCurrencyError to remove possibility of accidentally
       # exchanging currencies
-      def exchange_with(from, to_currency, &block)
+      def exchange_with(from, to_currency, &_block)
         raise DifferentCurrencyError, "No exchanging of currencies allowed: #{from} #{from.currency} to #{to_currency}"
       end
     end

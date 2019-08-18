@@ -96,7 +96,9 @@ describe Money::Arithmetic do
 
   describe "#<=>" do
     it "compares the two object amounts (same currency)" do
+      # rubocop:disable Lint/UselessComparison
       expect((Money.new(1_00, "USD") <=> Money.new(1_00, "USD"))).to eq 0
+      # rubocop:enable Lint/UselessComparison
       expect((Money.new(1_00, "USD") <=> Money.new(99, "USD"))).to be > 0
       expect((Money.new(1_00, "USD") <=> Money.new(2_00, "USD"))).to be < 0
     end

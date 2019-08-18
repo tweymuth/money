@@ -53,16 +53,19 @@ class Money
     # @raise [TypeError] when other object is not Money
     #
     def <=>(other)
-      unless other.is_a?(Money)
-        return unless other.respond_to?(:zero?) && other.zero?
+      begin
+        unless other.is_a?(Money)
+          return unless other.respond_to?(:zero?) && other.zero?
 
-        return other.is_a?(CoercedNumeric) ? 0 <=> fractional : fractional <=> 0
+          return other.is_a?(CoercedNumeric) ? 0 <=> fractional : fractional <=> 0
+        end
+        return 0 if zero? && other.zero?
+
+        other = other.exchange_to(currency)
+        fractional <=> other.fractional
+      rescue Money::Bank::UnknownRate
+        # Do nothing
       end
-      return 0 if zero? && other.zero?
-
-      other = other.exchange_to(currency)
-      fractional <=> other.fractional
-    rescue Money::Bank::UnknownRate
     end
 
     # Uses Comparable's implementation but raises ArgumentError if non-zero
