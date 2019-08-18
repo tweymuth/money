@@ -248,28 +248,29 @@ describe Money do
     end
 
     context "loading a serialized Money via YAML" do
-      let(:serialized) {
-        <<~YAML
-          !ruby/object:Money
-            fractional: 249.5
-            currency: !ruby/object:Money::Currency
-              id: :eur
-              priority: 2
-              iso_code: EUR
-              name: Euro
-              symbol: €
-              alternate_symbols: []
-              subunit: Cent
-              subunit_to_unit: 100
-              symbol_first: true
-              html_entity: ! '&#x20AC;'
-              decimal_mark: ! ','
-              thousands_separator: .
-              iso_numeric: '978'
-              mutex: !ruby/object:Mutex {}
-              last_updated: 2012-11-23 20:41:47.454438399 +02:00
-        YAML
+      # rubocop:disable Layout/MultilineBlockLayout, Layout/IndentHeredoc
+      let(:serialized) { <<YAML
+!ruby/object:Money
+  fractional: 249.5
+  currency: !ruby/object:Money::Currency
+    id: :eur
+    priority: 2
+    iso_code: EUR
+    name: Euro
+    symbol: €
+    alternate_symbols: []
+    subunit: Cent
+    subunit_to_unit: 100
+    symbol_first: true
+    html_entity: ! '&#x20AC;'
+    decimal_mark: ! ','
+    thousands_separator: .
+    iso_numeric: '978'
+    mutex: !ruby/object:Mutex {}
+    last_updated: 2012-11-23 20:41:47.454438399 +02:00
+YAML
       }
+      # rubocop:enable Layout/MultilineBlockLayout, Layout/IndentHeredoc
 
       it "uses BigDecimal when rounding" do
         m = YAML::load serialized
