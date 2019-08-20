@@ -20,9 +20,11 @@ class Money
       @rules[key]
     end
 
+    # rubocop:disable Naming/PredicateName
     def has_key?(key)
       @rules.has_key? key
     end
+    # rubocop:enable Naming/PredicateName
 
     private
 

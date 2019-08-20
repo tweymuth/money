@@ -52,11 +52,11 @@ class Money
       # It defaults to using an in-memory, thread safe store instance for
       # storing exchange rates.
       #
-      # @param [RateStore] st An exchange rate store, used to persist exchange rate pairs.
+      # @param [RateStore] store An exchange rate store, used to persist exchange rate pairs.
       # @yield [n] Optional block to use when rounding after exchanging one
       #  currency for another. See +Money::bank::base+
-      def initialize(st = Money::RatesStore::Memory.new, &block)
-        @store = st
+      def initialize(store = Money::RatesStore::Memory.new, &block)
+        @store = store
         super(&block)
       end
 
@@ -101,6 +101,7 @@ class Money
       #
       #   # Exchange 100 CAD to USD:
       #   bank.exchange_with(c2, "USD") #=> #<Money fractional:8031 currency:USD>
+      # rubocop:disable Metrics/MethodLength
       def exchange_with(from, to_currency, &block)
         to_currency = Currency.wrap(to_currency)
         if from.currency == to_currency
@@ -116,6 +117,7 @@ class Money
           end
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def calculate_fractional(from, to_currency)
         BigDecimal(from.fractional.to_s) / (
@@ -238,7 +240,7 @@ class Money
       # Delegates to +Money::RatesStore::Memory+
       #
       # @param [Symbol] format The format of +s+.
-      # @param [String] s The rates string.
+      # @param [String] rates The rates string.
       # @param [Hash] _opts Options hash to set special parameters. Backwards compatibility only.
       #
       # @return [self]
@@ -252,12 +254,12 @@ class Money
       #
       #   bank.get_rate("USD", "CAD") #=> 1.24515
       #   bank.get_rate("CAD", "USD") #=> 0.803115
-      def import_rates(format, s, _opts = {})
+      def import_rates(format, rates, _opts = {})
         raise Money::Bank::UnknownRateFormat unless
           RATE_FORMATS.include? format
 
         store.transaction do
-          data = FORMAT_SERIALIZERS[format].load(s)
+          data = FORMAT_SERIALIZERS[format].load(rates)
 
           data.each do |key, rate|
             from, to = key.split(SERIALIZER_SEPARATOR)

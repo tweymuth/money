@@ -277,7 +277,7 @@ class Money
     # Compares +self+ with +other_currency+ against the value of +priority+
     # attribute.
     #
-    # @param [Money::Currency] other_currency The currency to compare to.
+    # @param [Money::Currency] other The currency to compare to.
     #
     # @return [-1,0,1] -1 if less than, 0 is equal to, 1 if greater than
     #
@@ -287,12 +287,12 @@ class Money
     #   c1 <=> c2 #=> 1
     #   c2 <=> c1 #=> -1
     #   c1 <=> c1 #=> 0
-    def <=>(other_currency)
+    def <=>(other)
       # <=> returns nil when one of the values is nil
-      comparison = self.priority <=> other_currency.priority || 0
+      comparison = self.priority <=> other.priority || 0
 
       if comparison == 0
-        self.id <=> other_currency.id
+        self.id <=> other.id
       else
         comparison
       end
@@ -301,7 +301,7 @@ class Money
     # Compares +self+ with +other_currency+ and returns +true+ if the are the
     # same or if their +id+ attributes match.
     #
-    # @param [Money::Currency] other_currency The currency to compare to.
+    # @param [Money::Currency] other The currency to compare to.
     #
     # @return [Boolean]
     #
@@ -310,8 +310,8 @@ class Money
     #   c2 = Money::Currency.new(:jpy)
     #   c1 == c1 #=> true
     #   c1 == c2 #=> false
-    def ==(other_currency)
-      self.equal?(other_currency) || compare_ids(other_currency)
+    def ==(other)
+      self.equal?(other) || compare_ids(other)
     end
 
     def compare_ids(other_currency)

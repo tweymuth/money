@@ -39,9 +39,11 @@ class Money
       # Returns the singleton instance of the Base bank.
       #
       # @return [Money::Bank::Base]
+      # rubocop:disable Naming/MemoizedInstanceVariableName
       def self.instance
         @singleton ||= self.new
       end
+      # rubocop:enable Naming/MemoizedInstanceVariableName
 
       # The rounding method to use when exchanging rates.
       #

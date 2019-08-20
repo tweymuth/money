@@ -25,7 +25,7 @@ class Money
     # if the amounts are both zero. Checks against objects that are not Money or
     # a subclass will always return false.
     #
-    # @param [Money] other_money Value to compare with.
+    # @param [Money] other Value to compare with.
     #
     # @return [Boolean]
     #
@@ -35,10 +35,10 @@ class Money
     #   Money.new(100, "USD").eql?(Money.new(100, "GBP"))  #=> false
     #   Money.new(0, "USD").eql?(Money.new(0, "EUR"))      #=> true
     #   Money.new(100).eql?("1.00")                        #=> false
-    def eql?(other_money)
-      if other_money.is_a?(Money)
-        (fractional == other_money.fractional && currency == other_money.currency) ||
-          (fractional == 0 && other_money.fractional == 0)
+    def eql?(other)
+      if other.is_a?(Money)
+        (fractional == other.fractional && currency == other.currency) ||
+          (fractional == 0 && other.fractional == 0)
       else
         false
       end
@@ -163,7 +163,7 @@ class Money
     #
     # Note that you can't multiply a Money object by an other +Money+ object.
     #
-    # @param [Numeric] value Number to multiply by.
+    # @param [Numeric] other Number to multiply by.
     #
     # @return [Money] The resulting money.
     #
@@ -172,12 +172,12 @@ class Money
     # @example
     #   Money.new(100) * 2 #=> #<Money @fractional=200>
     #
-    def *(value)
-      value = value.value if value.is_a?(CoercedNumeric)
-      if value.is_a? Numeric
-        self.class.new(fractional * value, currency, bank)
+    def *(other)
+      other = other.value if other.is_a?(CoercedNumeric)
+      if other.is_a? Numeric
+        self.class.new(fractional * other, currency, bank)
       else
-        raise TypeError, "Can't multiply a #{self.class.name} by a #{value.class.name}'s value"
+        raise TypeError, "Can't multiply a #{self.class.name} by a #{other.class.name}'s value"
       end
     end
 
@@ -187,7 +187,7 @@ class Money
     #
     # +Money/Numeric+ returns +Money+. +Money/Money+ returns +Float+.
     #
-    # @param [Money, Numeric] value Number to divide by.
+    # @param [Money, Numeric] other Number to divide by.
     #
     # @return [Money] The resulting money if you divide Money by a number.
     # @return [Float] The resulting number if you divide Money by a Money.
@@ -197,13 +197,13 @@ class Money
     #   Money.new(100) / Money.new(10) #=> 10.0
     #
     # rubocop:disable Metrics/AbcSize
-    def /(value)
-      if value.is_a?(self.class)
-        fractional / as_d(value.exchange_to(currency).fractional).to_f
+    def /(other)
+      if other.is_a?(self.class)
+        fractional / as_d(other.exchange_to(currency).fractional).to_f
       else
-        raise TypeError, 'Can not divide by Money' if value.is_a?(CoercedNumeric)
+        raise TypeError, 'Can not divide by Money' if other.is_a?(CoercedNumeric)
 
-        self.class.new(fractional / as_d(value), currency, bank)
+        self.class.new(fractional / as_d(other), currency, bank)
       end
     end
     # rubocop:enable Metrics/AbcSize
@@ -267,13 +267,13 @@ class Money
 
     # Synonym for +#modulo+.
     #
-    # @param [Money, Integer] val Number take modulo with.
+    # @param [Money, Integer] other Number take modulo with.
     #
     # @return [Money]
     #
     # @see #modulo
-    def %(val)
-      modulo(val)
+    def %(other)
+      modulo(other)
     end
 
     # If different signs +self.modulo(val) - val+ otherwise +self.modulo(val)+

@@ -16,9 +16,9 @@ class Money
       #
       # @param [Hash] opts Optional store options.
       # @option opts [Boolean] :without_mutex disables the usage of a mutex
-      # @param [Hash] rt Optional initial exchange rate data.
-      def initialize(opts = {}, rt = {})
-        @options, @index = opts, rt
+      # @param [Hash] rate_data Optional initial exchange rate data.
+      def initialize(opts = {}, rate_data = {})
+        @options, @index = opts, rate_data
         @mutex = Mutex.new
         @in_transaction = false
       end
