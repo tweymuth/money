@@ -1,9 +1,16 @@
 # encoding: utf-8
 
 describe Money, "formatting" do
-  BAR = '{ "priority": 1, "iso_code": "BAR", "iso_numeric": "840", "name": "Dollar with 4 decimal places", "symbol": "$", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, "html_entity": "$", "decimal_mark": ".", "thousands_separator": ",", "smallest_denomination": 1 }'
-  INDIAN_BAR = '{ "priority": 1, "iso_code": "INDIAN_BAR", "iso_numeric": "840", "name": "Dollar with 4 decimal places", "symbol": "$", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, "html_entity": "$", "decimal_mark": ".", "thousands_separator": ",", "south_asian_number_formatting": true, "smallest_denomination": 1}'
-  EU4 = '{ "priority": 1, "iso_code": "EU4", "iso_numeric": "841", "name": "Euro with 4 decimal places", "symbol": "€", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, "html_entity": "€", "decimal_mark": ",", "thousands_separator": ".", "smallest_denomination": 1 }'
+  BAR = '{ "priority": 1, "iso_code": "BAR", "iso_numeric": "840", "name": "Dollar with 4 decimal places", '\
+        '"symbol": "$", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, "html_entity": "$", '\
+        '"decimal_mark": ".", "thousands_separator": ",", "smallest_denomination": 1 }'
+  INDIAN_BAR = '{ "priority": 1, "iso_code": "INDIAN_BAR", "iso_numeric": "840", "name": "Dollar with 4 decimal '\
+               'places", "symbol": "$", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, '\
+               '"html_entity": "$", "decimal_mark": ".", "thousands_separator": ",", '\
+               '"south_asian_number_formatting": true, "smallest_denomination": 1}'
+  EU4 = '{ "priority": 1, "iso_code": "EU4", "iso_numeric": "841", "name": "Euro with 4 decimal places", '\
+        '"symbol": "€", "subunit": "Cent", "subunit_to_unit": 10000, "symbol_first": true, "html_entity": "€", '\
+        '"decimal_mark": ",", "thousands_separator": ".", "smallest_denomination": 1 }'
 
   context "without i18n" do
     subject(:money) { Money.empty("USD") }
@@ -124,12 +131,15 @@ describe Money, "formatting" do
     end
 
     context "with overridden i18n settings" do
-      it "should respect explicit overriding of thousands_separator/delimiter when decimal_mark/separator collide and there’s no decimal component for currencies that have no subunit" do
+      it "should respect explicit overriding of thousands_separator/delimiter when decimal_mark/separator collide "\
+         "and there’s no decimal component for currencies that have no subunit" do
         expect(Money.new(300_000, 'ISK').format(thousands_separator: ".", decimal_mark: ',')).to eq "kr300.000"
       end
 
-      it "should respect explicit overriding of thousands_separator/delimiter when decimal_mark/separator collide and there’s no decimal component for currencies with subunits that drop_trailing_zeros" do
-        expect(Money.new(300_000, 'USD').format(thousands_separator: ".", decimal_mark: ',', drop_trailing_zeros: true)).to eq "$3.000"
+      it "should respect explicit overriding of thousands_separator/delimiter when decimal_mark/separator collide "\
+         "and there’s no decimal component for currencies with subunits that drop_trailing_zeros" do
+        expect(Money.new(300_000, 'USD').format(thousands_separator: ".", decimal_mark: ',',
+                                                drop_trailing_zeros: true)).to eq "$3.000"
       end
     end
   end
@@ -215,7 +225,8 @@ describe Money, "formatting" do
       expect(Money.us_dollar(1_000_000_000_12).format(no_cents: true)).to eq "$1,000,000,000"
     end
 
-    it "inserts thousands separator into the result if the amount is sufficiently large and the currency symbol is at the end" do
+    it "inserts thousands separator into the result if the amount is sufficiently large and the currency symbol is "\
+       "at the end" do
       expect(Money.euro(1_234_567_12).format).to eq "€1.234.567,12"
       expect(Money.euro(1_234_567_12).format(no_cents: true)).to eq "€1.234.567"
     end
@@ -288,7 +299,8 @@ describe Money, "formatting" do
       it "doesn't incorrectly format HTML (html_wrap)" do
         money = ::Money.new(1999, "RUB")
         output = money.format(html_wrap: true, no_cents: true)
-        expect(output).to eq "<span class=\"money-whole\">19</span> <span class=\"money-currency-symbol\">&#x20BD;</span>"
+        expect(output).to eq "<span class=\"money-whole\">19</span> "\
+                             "<span class=\"money-currency-symbol\">&#x20BD;</span>"
       end
     end
 
@@ -370,7 +382,8 @@ describe Money, "formatting" do
         expect(Money.new(100, currency).format(symbol: true)).to eq "¤1,00"
       end
 
-      specify "(symbol: some non-Boolean value that evaluates to true) returns symbol based on the given currency code" do
+      specify "(symbol: some non-Boolean value that evaluates to true) returns symbol based on the given currency "\
+              "code" do
         expect(Money.new(100, "GBP").format(symbol: true)).to eq "£1.00"
         expect(Money.new(100, "EUR").format(symbol: true)).to eq "€1,00"
         expect(Money.new(100, "SEK").format(symbol: true)).to eq "1,00 kr"
@@ -433,14 +446,18 @@ describe Money, "formatting" do
       end
 
       specify "(south_asian_number_formatting: true) works as documented" do
-        expect(Money.new(10000000, 'INR').format(south_asian_number_formatting: true, symbol: false)).to eq "1,00,000.00"
-        expect(Money.new(1000000000, 'INDIAN_BAR').format(south_asian_number_formatting: true, symbol: false)).to eq "1,00,000.0000"
+        expect(Money.new(10000000, 'INR').format(south_asian_number_formatting: true, symbol: false))
+          .to eq "1,00,000.00"
+        expect(Money.new(1000000000, 'INDIAN_BAR').format(south_asian_number_formatting: true, symbol: false))
+          .to eq "1,00,000.0000"
         expect(Money.new(10000000).format(south_asian_number_formatting: true)).to eq "$1,00,000.00"
       end
 
       specify "(south_asian_number_formatting: true and no_cents_if_whole => true) works as documented" do
-        expect(Money.new(10000000, 'INR').format(south_asian_number_formatting: true, symbol: false, no_cents_if_whole: true)).to eq "1,00,000"
-        expect(Money.new(1000000000, 'INDIAN_BAR').format(south_asian_number_formatting: true, symbol: false, no_cents_if_whole: true)).to eq "1,00,000"
+        expect(Money.new(10000000, 'INR').format(south_asian_number_formatting: true, symbol: false,
+                                                 no_cents_if_whole: true)).to eq "1,00,000"
+        expect(Money.new(1000000000, 'INDIAN_BAR').format(south_asian_number_formatting: true, symbol: false,
+                                                          no_cents_if_whole: true)).to eq "1,00,000"
       end
     end
 
@@ -472,12 +489,15 @@ describe Money, "formatting" do
       context "without i18n" do
         before { Money.use_i18n = false }
 
-        it "should respect explicit overriding of thousands_separator/delimiter when decimal_mark/separator collide and there’s no decimal component for currencies that have no subunit" do
+        it "should respect explicit overriding of thousands_separator/delimiter when decimal_mark/separator collide "\
+           "and there’s no decimal component for currencies that have no subunit" do
           expect(Money.new(300_000, 'ISK').format(thousands_separator: ",", decimal_mark: '.')).to eq "kr300,000"
         end
 
-        it "should respect explicit overriding of thousands_separator/delimiter when decimal_mark/separator collide and there’s no decimal component for currencies with subunits that drop_trailing_zeros" do
-          expect(Money.new(300_000, 'USD').format(thousands_separator: ".", decimal_mark: ',', drop_trailing_zeros: true)).to eq "$3.000"
+        it "should respect explicit overriding of thousands_separator/delimiter when decimal_mark/separator collide "\
+           "and there’s no decimal component for currencies with subunits that drop_trailing_zeros" do
+          expect(Money.new(300_000, 'USD').format(thousands_separator: ".", decimal_mark: ',',
+                                                  drop_trailing_zeros: true)).to eq "$3.000"
         end
 
         after { Money.use_i18n = true }
@@ -485,9 +505,12 @@ describe Money, "formatting" do
     end
 
     describe ":thousands_separator and :decimal_mark option" do
-      specify "(thousands_separator: a thousands_separator string, decimal_mark: a decimal_mark string) works as documented" do
-        expect(Money.new(123_456_789, "USD").format(thousands_separator: ".", decimal_mark: ",")).to eq("$1.234.567,89")
-        expect(Money.new(987_654_321, "USD").format(thousands_separator: " ", decimal_mark: ".")).to eq("$9 876 543.21")
+      specify "(thousands_separator: a thousands_separator string, decimal_mark: a decimal_mark string) works "\
+              "as documented" do
+        expect(Money.new(123_456_789, "USD").format(thousands_separator: ".",
+                                                    decimal_mark: ",")).to eq("$1.234.567,89")
+        expect(Money.new(987_654_321, "USD").format(thousands_separator: " ",
+                                                    decimal_mark: ".")).to eq("$9 876 543.21")
       end
     end
 
@@ -513,17 +536,24 @@ describe Money, "formatting" do
     describe ":html_wrap option" do
       specify "(html_wrap: true) works as documented" do
         string = Money.ca_dollar(570).format(html_wrap: true)
-        expect(string).to eq "<span class=\"money-currency-symbol\">$</span><span class=\"money-whole\">5</span><span class=\"money-decimal-mark\">.</span><span class=\"money-decimal\">70</span>"
+        expected_string = "<span class=\"money-currency-symbol\">$</span><span class=\"money-whole\">5</span>"\
+                          "<span class=\"money-decimal-mark\">.</span><span class=\"money-decimal\">70</span>"
+        expect(string).to eq expected_string
       end
 
       specify "(html_wrap: true, with_currency: true)" do
         string = Money.ca_dollar(570).format(html_wrap: true, with_currency: true)
-        expect(string).to eq "<span class=\"money-currency-symbol\">$</span><span class=\"money-whole\">5</span><span class=\"money-decimal-mark\">.</span><span class=\"money-decimal\">70</span> <span class=\"money-currency\">CAD</span>"
+        expected_string = "<span class=\"money-currency-symbol\">$</span><span class=\"money-whole\">5</span>" \
+                          "<span class=\"money-decimal-mark\">.</span><span class=\"money-decimal\">70</span>"\
+                          " <span class=\"money-currency\">CAD</span>"
+        expect(string).to eq expected_string
       end
 
       specify "should fallback to symbol if entity is not available" do
         string = Money.new(570, 'DKK').format(html_wrap: true)
-        expect(string).to eq "<span class=\"money-whole\">5</span><span class=\"money-decimal-mark\">,</span><span class=\"money-decimal\">70</span> <span class=\"money-currency-symbol\">kr.</span>"
+        expected_string = "<span class=\"money-whole\">5</span><span class=\"money-decimal-mark\">,</span>" \
+                          "<span class=\"money-decimal\">70</span> <span class=\"money-currency-symbol\">kr.</span>"
+        expect(string).to eq expected_string
       end
     end
 
@@ -554,11 +584,13 @@ describe Money, "formatting" do
 
     describe ":symbol_before_without_space option" do
       it "does not insert space between currency symbol and amount when set to true" do
-        expect(Money.euro(1_234_567_12).format(symbol_position: :before, symbol_before_without_space: true)).to eq "€1.234.567,12"
+        expect(Money.euro(1_234_567_12).format(symbol_position: :before,
+                                               symbol_before_without_space: true)).to eq "€1.234.567,12"
       end
 
       it "inserts space between currency symbol and amount when set to false" do
-        expect(Money.euro(1_234_567_12).format(symbol_position: :before, symbol_before_without_space: false)).to eq "€ 1.234.567,12"
+        expect(Money.euro(1_234_567_12).format(symbol_position: :before,
+                                               symbol_before_without_space: false)).to eq "€ 1.234.567,12"
       end
 
       it "defaults to true" do
@@ -568,11 +600,13 @@ describe Money, "formatting" do
 
     describe ":symbol_after_without_space option" do
       it "does not insert space between amount and currency symbol when set to true" do
-        expect(Money.euro(1_234_567_12).format(symbol_position: :after, symbol_after_without_space: true)).to eq "1.234.567,12€"
+        expect(Money.euro(1_234_567_12).format(symbol_position: :after,
+                                               symbol_after_without_space: true)).to eq "1.234.567,12€"
       end
 
       it "inserts space between amount and currency symbol when set to false" do
-        expect(Money.euro(1_234_567_12).format(symbol_position: :after, symbol_after_without_space: false)).to eq "1.234.567,12 €"
+        expect(Money.euro(1_234_567_12).format(symbol_position: :after,
+                                               symbol_after_without_space: false)).to eq "1.234.567,12 €"
       end
 
       it "defaults to false" do
@@ -695,13 +729,17 @@ describe Money, "formatting" do
       end
 
       it 'ignores :symbol_before_without_space in favour of format' do
-        expect(money.format(format: '%u %n', symbol_position: :before, symbol_before_without_space: true)).to eq('$ 99.99')
-        expect(money.format(format: '%u%n', symbol_position: :before, symbol_before_without_space: false)).to eq('$99.99')
+        expect(money.format(format: '%u %n', symbol_position: :before,
+                            symbol_before_without_space: true)).to eq('$ 99.99')
+        expect(money.format(format: '%u%n', symbol_position: :before,
+                            symbol_before_without_space: false)).to eq('$99.99')
       end
 
       it 'ignores :symbol_after_without_space in favour of format' do
-        expect(money.format(format: '%n %u', symbol_position: :after, symbol_after_without_space: true)).to eq('99.99 $')
-        expect(money.format(format: '%n%u', symbol_position: :after, symbol_after_without_space: false)).to eq('99.99$')
+        expect(money.format(format: '%n %u', symbol_position: :after,
+                            symbol_after_without_space: true)).to eq('99.99 $')
+        expect(money.format(format: '%n%u', symbol_position: :after,
+                            symbol_after_without_space: false)).to eq('99.99$')
       end
 
       it 'works with sign' do
@@ -826,7 +864,8 @@ describe Money, "formatting" do
       # all different values
       Money::Currency.all.each do |currency|
         format = Money.new(1999_98, currency).format(disambiguate: true)
-        expect(formatted_results.keys).not_to include(format), "Format '#{format}' for #{currency} is ambiguous with currency #{formatted_results[format]}."
+        message = "Format '#{format}' for #{currency} is ambiguous with currency #{formatted_results[format]}."
+        expect(formatted_results.keys).not_to include(format), message
         formatted_results[format] = currency
       end
     end

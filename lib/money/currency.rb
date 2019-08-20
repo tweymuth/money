@@ -9,6 +9,7 @@ class Money
   #
   # @see https://en.wikipedia.org/wiki/Currency
   # @see http://iso4217.net/
+  # rubocop:disable Metrics/ClassLength
   class Currency
     include Comparable
     extend Enumerable
@@ -340,9 +341,14 @@ class Money
     #
     # @example
     #   Money::Currency.new(:usd) #=> #<Currency id: usd ...>
+    # rubocop:disable Metrics/AbcSize
     def inspect
-      "#<#{self.class.name} id: #{id}, priority: #{priority}, symbol_first: #{symbol_first}, thousands_separator: #{thousands_separator}, html_entity: #{html_entity}, decimal_mark: #{decimal_mark}, name: #{name}, symbol: #{symbol}, subunit_to_unit: #{subunit_to_unit}, exponent: #{exponent}, iso_code: #{iso_code}, iso_numeric: #{iso_numeric}, subunit: #{subunit}, smallest_denomination: #{smallest_denomination}>"
+      "#<#{self.class.name} id: #{id}, priority: #{priority}, symbol_first: #{symbol_first}, thousands_separator: "\
+      "#{thousands_separator}, html_entity: #{html_entity}, decimal_mark: #{decimal_mark}, name: #{name}, symbol: "\
+      "#{symbol}, subunit_to_unit: #{subunit_to_unit}, exponent: #{exponent}, iso_code: #{iso_code}, iso_numeric: "\
+      "#{iso_numeric}, subunit: #{subunit}, smallest_denomination: #{smallest_denomination}>"
     end
+    # rubocop:enable Metrics/AbcSize
 
     # Returns a string representation corresponding to the upcase +id+
     # attribute.
@@ -425,6 +431,7 @@ class Money
 
     private
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def initialize_data!
       data = self.class.table[@id]
       @alternate_symbols = data[:alternate_symbols]
@@ -442,5 +449,7 @@ class Money
       @symbol_first          = data[:symbol_first]
       @thousands_separator   = data[:thousands_separator]
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
   end
+  # rubocop:enable Metrics/ClassLength
 end

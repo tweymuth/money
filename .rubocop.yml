@@ -19,6 +19,11 @@ Lint/HandleExceptions:
 
 Metrics:
   Enabled: true
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+Metrics/LineLength:
+  Max: 120
 
 Naming:
   Enabled: true

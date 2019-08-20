@@ -12,6 +12,7 @@ class Money
     #   Numeric — performs the split between a given number of parties evenely
     #   Array<Numeric> — allocates the amounts proportionally to the given array
     #
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def self.generate(amount, parts, whole_amounts = true)
       parts = parts.is_a?(Numeric) ? Array.new(parts, 1) : parts.dup
 
@@ -36,5 +37,6 @@ class Money
 
       result
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
   end
 end

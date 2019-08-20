@@ -17,6 +17,7 @@ require "money/money/locale_backend"
 # Money is a value object and should be treated as immutable.
 #
 # @see http://en.wikipedia.org/wiki/Money
+# rubocop:disable Metrics/ClassLength
 class Money
   include Comparable
   include Money::Arithmetic
@@ -161,9 +162,11 @@ class Money
 
   def self.use_i18n=(value)
     if value
-      warn '[DEPRECATION] `use_i18n` is deprecated - use `Money.locale_backend = :i18n` instead for locale based formatting'
+      warn '[DEPRECATION] `use_i18n` is deprecated - use `Money.locale_backend = :i18n` instead for '\
+           'locale based formatting'
     else
-      warn '[DEPRECATION] `use_i18n` is deprecated - use `Money.locale_backend = :currency` instead for currency based formatting'
+      warn '[DEPRECATION] `use_i18n` is deprecated - use `Money.locale_backend = :currency` instead for '\
+           'currency based formatting'
     end
 
     @use_i18n = value
@@ -624,3 +627,4 @@ class Money
     self.class.locale_backend
   end
 end
+# rubocop:enable Metrics/ClassLength

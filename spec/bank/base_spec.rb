@@ -49,7 +49,8 @@ describe Money::Bank::Base do
     end
 
     it "accepts currency/currency" do
-      expect { subject.send(:same_currency?, Money::Currency.wrap('USD'), Money::Currency.wrap('EUR')) }.to_not raise_exception
+      expect { subject.send(:same_currency?, Money::Currency.wrap('USD'), Money::Currency.wrap('EUR')) }
+        .to_not raise_exception
     end
 
     it "returns true when currencies match" do

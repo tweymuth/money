@@ -3,6 +3,7 @@
 require 'money/money/formatting_rules'
 
 class Money
+  # rubocop:disable Metrics/ClassLength
   class Formatter
     DEFAULTS = {
       thousands_separator: '',
@@ -148,7 +149,9 @@ class Money
     #
     # @example
     #   Money.ca_dollar(570).format(html_wrap: true, with_currency: true)
-    #   #=> "<span class=\"money-currency-symbol\">$</span><span class=\"money-whole\">5</span><span class=\"money-decimal-mark\">.</span><span class=\"money-decimal\">70</span> <span class=\"money-currency\">CAD</span>"
+    #   #=> "<span class=\"money-currency-symbol\">$</span><span class=\"money-whole\">5</span>"\
+    #       "<span class=\"money-decimal-mark\">.</span><span class=\"money-decimal\">70</span> "\
+    #       "<span class=\"money-currency\">CAD</span>"
     #
     # @option rules [Boolean] :sign_before_symbol (false) Whether the sign should be
     #  before the currency symbol.
@@ -251,6 +254,7 @@ class Money
 
     attr_reader :money, :currency, :rules
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def format_number
       whole_part, decimal_part = extract_whole_and_decimal_parts
 
@@ -273,7 +277,9 @@ class Money
         [whole_part, decimal_part].compact.join(decimal_mark)
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
     def append_sign(formatted_number)
       sign = money.negative? ? '-' : ''
 
@@ -302,7 +308,9 @@ class Money
         "#{sign_before}#{sign}#{formatted_number}"
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
 
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def append_currency_symbol(formatted_number)
       if rules[:with_currency]
         formatted_number << " "
@@ -317,6 +325,7 @@ class Money
       end
       formatted_number
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def show_free_text?
       money.zero? && rules[:display_free]
@@ -348,6 +357,7 @@ class Money
       fractional_units.to_s('F').split('.')
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def format_decimal_part(value)
       return nil if currency.decimal_places == 0 && !Money.infinite_precision
       return nil if rules[:no_cents]
@@ -361,6 +371,7 @@ class Money
 
       value.empty? ? nil : value
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     def lookup(key)
       return rules[key] || DEFAULTS[key] if rules.has_key?(key)
@@ -377,6 +388,7 @@ class Money
       end
     end
 
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
     def symbol_value_from(rules)
       if rules.has_key?(:symbol)
         if rules[:symbol] === true
@@ -398,5 +410,7 @@ class Money
         money.symbol
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity
   end
+  # rubocop:enable Metrics/ClassLength
 end

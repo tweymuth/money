@@ -605,7 +605,9 @@ YAML
       money = Money.new(10_00, "DKK")
       expect(money).to eq money.to_money
       expect(money).to eq money.to_money("DKK")
-      expect(money.bank).to receive(:exchange_with).with(Money.new(10_00, Money::Currency.new("DKK")), Money::Currency.new("EUR")).and_return(Money.new(200_00, Money::Currency.new('EUR')))
+      expect(money.bank).to receive(:exchange_with).with(Money.new(10_00, Money::Currency.new("DKK")),
+                                                         Money::Currency.new("EUR"))
+                                                   .and_return(Money.new(200_00, Money::Currency.new('EUR')))
       expect(money.to_money("EUR")).to eq Money.new(200_00, "EUR")
     end
   end
@@ -632,13 +634,17 @@ YAML
   describe "#exchange_to" do
     it "exchanges the amount via its exchange bank" do
       money = Money.new(100_00, "USD")
-      expect(money.bank).to receive(:exchange_with).with(Money.new(100_00, Money::Currency.new("USD")), Money::Currency.new("EUR")).and_return(Money.new(200_00, Money::Currency.new('EUR')))
+      expect(money.bank).to receive(:exchange_with).with(Money.new(100_00, Money::Currency.new("USD")),
+                                                         Money::Currency.new("EUR"))
+                                                   .and_return(Money.new(200_00, Money::Currency.new('EUR')))
       money.exchange_to("EUR")
     end
 
     it "exchanges the amount properly" do
       money = Money.new(100_00, "USD")
-      expect(money.bank).to receive(:exchange_with).with(Money.new(100_00, Money::Currency.new("USD")), Money::Currency.new("EUR")).and_return(Money.new(200_00, Money::Currency.new('EUR')))
+      expect(money.bank).to receive(:exchange_with).with(Money.new(100_00, Money::Currency.new("USD")),
+                                                         Money::Currency.new("EUR"))
+                                                   .and_return(Money.new(200_00, Money::Currency.new('EUR')))
       expect(money.exchange_to("EUR")).to eq Money.new(200_00, "EUR")
     end
 

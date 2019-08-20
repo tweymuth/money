@@ -1,4 +1,5 @@
 class Money
+  # rubocop:disable Metrics/ModuleLength
   module Arithmetic
     # Wrapper for coerced numeric values to distinguish
     # when numeric was on the 1st place in operation.
@@ -52,6 +53,7 @@ class Money
     #
     # @raise [TypeError] when other object is not Money
     #
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def <=>(other)
       begin
         unless other.is_a?(Money)
@@ -67,6 +69,7 @@ class Money
         # Do nothing
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     # Uses Comparable's implementation but raises ArgumentError if non-zero
     # numeric value is given.
@@ -133,6 +136,7 @@ class Money
         "Can't add or subtract a non-zero #{value.class.name} value"
       end
 
+      # rubocop:disable Metrics/MethodLength
       define_method(op) do |other|
         case other
         when Money
@@ -151,6 +155,7 @@ class Money
           raise TypeError, "Unsupported argument type: #{other.class.name}"
         end
       end
+      # rubocop:enable Metrics/MethodLength
     end
 
     # Multiplies the monetary value with the given number and returns a new
@@ -191,6 +196,7 @@ class Money
     #   Money.new(100) / 10            #=> #<Money @fractional=10>
     #   Money.new(100) / Money.new(10) #=> 10.0
     #
+    # rubocop:disable Metrics/AbcSize
     def /(value)
       if value.is_a?(self.class)
         fractional / as_d(value.exchange_to(currency).fractional).to_f
@@ -200,6 +206,7 @@ class Money
         self.class.new(fractional / as_d(value), currency, bank)
       end
     end
+    # rubocop:enable Metrics/AbcSize
 
     # Synonym for +#/+.
     #
@@ -277,6 +284,7 @@ class Money
     #
     # @example
     #   Money.new(100).remainder(9) #=> #<Money @fractional=1>
+    # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def remainder(val)
       if val.is_a?(Money) && currency != val.currency
         val = val.exchange_to(currency)
@@ -288,6 +296,7 @@ class Money
         self.modulo(val) - (val.is_a?(Money) ? val : self.class.new(val, currency, bank))
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     # Return absolute value of self as a new Money object.
     #
@@ -331,4 +340,5 @@ class Money
       [self, CoercedNumeric.new(other)]
     end
   end
+  # rubocop:enable Metrics/ModuleLength
 end

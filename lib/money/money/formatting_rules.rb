@@ -33,6 +33,7 @@ class Money
     # @param [Hash] rules
     #
     # @return [Hash]
+    # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
     def normalize_formatting_rules(rules)
       if rules.size == 0
         rules = {}
@@ -56,6 +57,7 @@ class Money
 
       rules
     end
+    # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
 
     def default_formatting_rules
       Money.default_formatting_rules || {}
@@ -88,6 +90,7 @@ class Money
       end
     end
 
+    # rubocop:disable Metrics/MethodLength
     def symbol_position_from(rules)
       if rules.has_key?(:symbol_position)
         if [:before, :after].include?(rules[:symbol_position])
@@ -101,30 +104,39 @@ class Money
         :after
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
+    # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
     def warn_about_deprecated_rules(rules)
       if rules.has_key?(:symbol_position)
         position = rules[:symbol_position]
         template = position == :before ? '%u %n' : '%n %u'
 
-        warn "[DEPRECATION] `symbol_position: :#{position}` is deprecated - you can replace it with `format: #{template}`"
+        warn "[DEPRECATION] `symbol_position: :#{position}` is deprecated - you can replace it with "\
+             "`format: #{template}`"
       end
 
       if rules.has_key?(:symbol_before_without_space)
-        warn "[DEPRECATION] `symbol_before_without_space:` option is deprecated - you can replace it with `format: '%u%n'`"
+        warn "[DEPRECATION] `symbol_before_without_space:` option is deprecated - you can replace it with "\
+             "`format: '%u%n'`"
       end
 
       if rules.has_key?(:symbol_after_without_space)
-        warn "[DEPRECATION] `symbol_after_without_space:` option is deprecated - you can replace it with `format: '%n%u'`"
+        warn "[DEPRECATION] `symbol_after_without_space:` option is deprecated - you can replace it with "\
+             "`format: '%n%u'`"
       end
 
       if rules.has_key?(:html)
-        warn "[DEPRECATION] `html` is deprecated - use `html_wrap` instead. Please note that `html_wrap` will wrap all parts of currency and if you use `with_currency` option, currency element class changes from `currency` to `money-currency`."
+        warn "[DEPRECATION] `html` is deprecated - use `html_wrap` instead. Please note that `html_wrap` will wrap "\
+             "all parts of currency and if you use `with_currency` option, currency element class changes from "\
+             "`currency` to `money-currency`."
       end
 
       if rules.has_key?(:html_wrap_symbol)
-        warn "[DEPRECATION] `html_wrap_symbol` is deprecated - use `html_wrap` instead. Please note that `html_wrap` will wrap all parts of currency."
+        warn "[DEPRECATION] `html_wrap_symbol` is deprecated - use `html_wrap` instead. Please note that `html_wrap` "\
+             "will wrap all parts of currency."
       end
     end
+    # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity
   end
 end

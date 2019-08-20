@@ -44,7 +44,8 @@ describe Money::Bank::VariableExchange do
         end
 
         it "raises an UnknownCurrency exception when an unknown currency is requested" do
-          expect { bank.exchange_with(Money.new(100, 'USD'), 'BBB') }.to raise_exception(Money::Currency::UnknownCurrency)
+          expect { bank.exchange_with(Money.new(100, 'USD'), 'BBB') }
+            .to raise_exception(Money::Currency::UnknownCurrency)
         end
 
         it "raises an UnknownRate exception when an unknown rate is requested" do
@@ -74,7 +75,8 @@ describe Money::Bank::VariableExchange do
         end
 
         it "doesn't loose precision when handling larger amounts" do
-          expect(bank.exchange_with(Money.new(100_000_000_000_000_01, 'USD'), 'EUR')).to eq Money.new(133_000_000_000_000_01, 'EUR')
+          expect(bank.exchange_with(Money.new(100_000_000_000_000_01, 'USD'), 'EUR'))
+            .to eq Money.new(133_000_000_000_000_01, 'EUR')
         end
       end
     end

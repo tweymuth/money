@@ -9,7 +9,8 @@ class Money
       end
 
       def lookup(key, currency)
-        warn '[DEPRECATION] You are using the default localization behaviour that will change in the next major release. Find out more - https://github.com/RubyMoney/money#deprecation'
+        warn '[DEPRECATION] You are using the default localization behaviour that will change in the next major '\
+             'release. Find out more - https://github.com/RubyMoney/money#deprecation'
 
         if Money.use_i18n
           i18n_backend.lookup(key, nil) || currency.public_send(key)

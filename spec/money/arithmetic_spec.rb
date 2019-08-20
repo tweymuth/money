@@ -205,7 +205,8 @@ describe Money::Arithmetic do
       expect(Money.new(10_00, "USD") + Money.new(90, "USD")).to eq Money.new(10_90, "USD")
     end
 
-    it "converts other object amount to current currency and adds other amount to current amount (different currency)" do
+    it "converts other object amount to current currency and adds other amount to current amount "\
+       "(different currency)" do
       other = Money.new(90, "EUR")
       expect(other).to receive(:exchange_to).with(Money::Currency.new("USD")).and_return(Money.new(9_00, "USD"))
       expect(Money.new(10_00, "USD") + other).to eq Money.new(19_00, "USD")
@@ -236,7 +237,8 @@ describe Money::Arithmetic do
       expect(Money.new(10_00, "USD") - Money.new(90, "USD")).to eq Money.new(9_10, "USD")
     end
 
-    it "converts other object amount to current currency and subtracts other amount from current amount (different currency)" do
+    it "converts other object amount to current currency and subtracts other amount from current amount "\
+       "(different currency)" do
       other = Money.new(90, "EUR")
       expect(other).to receive(:exchange_to).with(Money::Currency.new("USD")).and_return(Money.new(9_00, "USD"))
       expect(Money.new(10_00, "USD") - other).to eq Money.new(1_00, "USD")
@@ -505,7 +507,8 @@ describe Money::Arithmetic do
 
     it "preserves the class in the result when using a subclass of Money by a subclass of Money" do
       special_money_class = Class.new(Money)
-      expect(special_money_class.new(10_00, "USD").divmod(special_money_class.new(4_00)).last).to be_a special_money_class
+      expect(special_money_class.new(10_00, "USD").divmod(special_money_class.new(4_00)).last)
+        .to be_a special_money_class
     end
 
     it_behaves_like 'instance with custom bank', :divmod, Money.new(1)
