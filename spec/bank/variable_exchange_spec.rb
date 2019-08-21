@@ -178,7 +178,7 @@ describe Money::Bank::VariableExchange do
     context "with format == :yaml" do
       it "should return rates formatted as yaml" do
         yaml = subject.export_rates(:yaml)
-        expect(YAML.safe_load(yaml)).to eq @rates
+        expect(YAML.load(yaml)).to eq @rates # rubocop:disable Security/YAMLLoad
       end
     end
 
