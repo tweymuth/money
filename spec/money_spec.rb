@@ -273,7 +273,7 @@ YAML
       # rubocop:enable Layout/MultilineBlockLayout, Layout/IndentHeredoc
 
       it "uses BigDecimal when rounding" do
-        m = YAML::load serialized
+        m = YAML::load serialized # rubocop:disable Security/YAMLLoad
         expect(m).to be_a(Money)
         expect(m.class.infinite_precision).to be false
         expect(m.fractional).to eq 250 # 249.5 rounded up
@@ -281,7 +281,7 @@ YAML
       end
 
       it "is a BigDecimal when using infinite_precision", :infinite_precision do
-        money = YAML::load serialized
+        money = YAML::load serialized  # rubocop:disable Security/YAMLLoad
         expect(money.fractional).to be_a BigDecimal
       end
     end

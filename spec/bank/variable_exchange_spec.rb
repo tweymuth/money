@@ -165,20 +165,20 @@ describe Money::Bank::VariableExchange do
     context "with format == :json" do
       it "should return rates formatted as json" do
         json = subject.export_rates(:json)
-        expect(JSON.load(json)).to eq @rates
+        expect(JSON.parse(json)).to eq @rates
       end
     end
 
     context "with format == :ruby" do
       it "should return rates formatted as ruby objects" do
-        expect(Marshal.load(subject.export_rates(:ruby))).to eq @rates
+        expect(Marshal.load(subject.export_rates(:ruby))).to eq @rates # rubocop:disable Security/MarshalLoad
       end
     end
 
     context "with format == :yaml" do
       it "should return rates formatted as yaml" do
         yaml = subject.export_rates(:yaml)
-        expect(YAML.load(yaml)).to eq @rates
+        expect(YAML.safe_load(yaml)).to eq @rates
       end
     end
 
