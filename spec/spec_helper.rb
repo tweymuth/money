@@ -1,9 +1,11 @@
-require "coveralls"
+# frozen_string_literal: true
+
+require 'coveralls'
 Coveralls.wear!
 
 $LOAD_PATH.unshift File.dirname(__FILE__)
-require "rspec"
-require "money"
+require 'rspec'
+require 'money'
 
 Dir['./spec/support/**/*.rb'].sort.each { |f| require f }
 
@@ -19,7 +21,7 @@ def reset_i18n
   I18n.backend = I18n::Backend::Simple.new
 end
 
-RSpec.shared_context "with infinite precision", :infinite_precision do
+RSpec.shared_context 'with infinite precision', :infinite_precision do
   before do
     Money.infinite_precision = true
   end

@@ -1,4 +1,4 @@
-# encoding: UTF-8
+# frozen_string_literal: true
 
 class Money
   class FormattingRules
@@ -22,8 +22,9 @@ class Money
 
     # rubocop:disable Naming/PredicateName
     def has_key?(key)
-      @rules.has_key? key
+      @rules.key? key
     end
+    alias key? has_key?
     # rubocop:enable Naming/PredicateName
 
     private
@@ -37,7 +38,7 @@ class Money
     # @return [Hash]
     # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity, Metrics/AbcSize
     def normalize_formatting_rules(rules)
-      if rules.size == 0
+      if rules.empty?
         rules = {}
       elsif rules.size == 1
         rules = rules.pop
@@ -49,9 +50,7 @@ class Money
         end
       end
 
-      if !rules.include?(:decimal_mark) && rules.include?(:separator)
-        rules[:decimal_mark] = rules[:separator]
-      end
+      rules[:decimal_mark] = rules[:separator] if !rules.include?(:decimal_mark) && rules.include?(:separator)
 
       if !rules.include?(:thousands_separator) && rules.include?(:delimiter)
         rules[:thousands_separator] = rules[:delimiter]
@@ -67,7 +66,7 @@ class Money
 
     def translate_formatting_rules(rules)
       begin
-        rules[:symbol] = I18n.t currency.iso_code, scope: "number.currency.symbol", raise: true
+        rules[:symbol] = I18n.t currency.iso_code, scope: 'number.currency.symbol', raise: true
       rescue I18n::MissingTranslationData
         # Do nothing
       end
@@ -75,8 +74,8 @@ class Money
     end
 
     def localize_formatting_rules(rules)
-      if currency.iso_code == "JPY" && I18n.locale == :ja
-        rules[:symbol] = "円" unless rules[:symbol] == false
+      if currency.iso_code == 'JPY' && I18n.locale == :ja
+        rules[:symbol] = '円' unless rules[:symbol] == false
         rules[:format] = '%n%u'
       end
       rules
@@ -92,11 +91,11 @@ class Money
       end
     end
 
-    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength, Style/GuardClause
     def symbol_position_from(rules)
-      if rules.has_key?(:symbol_position)
-        if [:before, :after].include?(rules[:symbol_position])
-          return rules[:symbol_position]
+      if rules.key?(:symbol_position)
+        if %i[before after].include?(rules[:symbol_position])
+          rules[:symbol_position]
         else
           raise ArgumentError, ":symbol_position must be ':before' or ':after'"
         end
@@ -106,11 +105,11 @@ class Money
         :after
       end
     end
-    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/MethodLength, Style/GuardClause
 
     # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
     def warn_about_deprecated_rules(rules)
-      if rules.has_key?(:symbol_position)
+      if rules.key?(:symbol_position)
         position = rules[:symbol_position]
         template = position == :before ? '%u %n' : '%n %u'
 
@@ -118,26 +117,28 @@ class Money
              "`format: #{template}`"
       end
 
-      if rules.has_key?(:symbol_before_without_space)
-        warn "[DEPRECATION] `symbol_before_without_space:` option is deprecated - you can replace it with "\
+      if rules.key?(:symbol_before_without_space)
+        warn '[DEPRECATION] `symbol_before_without_space:` option is deprecated - you can replace it with '\
              "`format: '%u%n'`"
       end
 
-      if rules.has_key?(:symbol_after_without_space)
-        warn "[DEPRECATION] `symbol_after_without_space:` option is deprecated - you can replace it with "\
+      if rules.key?(:symbol_after_without_space)
+        warn '[DEPRECATION] `symbol_after_without_space:` option is deprecated - you can replace it with '\
              "`format: '%n%u'`"
       end
 
-      if rules.has_key?(:html)
-        warn "[DEPRECATION] `html` is deprecated - use `html_wrap` instead. Please note that `html_wrap` will wrap "\
-             "all parts of currency and if you use `with_currency` option, currency element class changes from "\
-             "`currency` to `money-currency`."
+      if rules.key?(:html)
+        warn '[DEPRECATION] `html` is deprecated - use `html_wrap` instead. Please note that `html_wrap` will wrap '\
+             'all parts of currency and if you use `with_currency` option, currency element class changes from '\
+             '`currency` to `money-currency`.'
       end
 
-      if rules.has_key?(:html_wrap_symbol)
-        warn "[DEPRECATION] `html_wrap_symbol` is deprecated - use `html_wrap` instead. Please note that `html_wrap` "\
-             "will wrap all parts of currency."
+      # rubocop:disable Style/GuardClause
+      if rules.key?(:html_wrap_symbol)
+        warn '[DEPRECATION] `html_wrap_symbol` is deprecated - use `html_wrap` instead. Please note that `html_wrap` '\
+             'will wrap all parts of currency.'
       end
+      # rubocop:enable Style/GuardClause
     end
     # rubocop:enable Metrics/MethodLength, Metrics/CyclomaticComplexity
   end

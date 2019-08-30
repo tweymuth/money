@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Money
   # Provides classes that aid in the ability of exchange one currency with
   # another.
@@ -41,7 +43,7 @@ class Money
       # @return [Money::Bank::Base]
       # rubocop:disable Naming/MemoizedInstanceVariableName
       def self.instance
-        @singleton ||= self.new
+        @singleton ||= new
       end
       # rubocop:enable Naming/MemoizedInstanceVariableName
 
@@ -78,8 +80,7 @@ class Money
       #  +Money::Bank+ class.
       #
       # @return [self]
-      def setup
-      end
+      def setup; end
 
       # Exchanges the given +Money+ object to a new +Money+ object in
       # +to_currency+.
@@ -100,7 +101,7 @@ class Money
       #
       # @return [Money]
       def exchange_with(_from, _to_currency, &_block)
-        raise NotImplementedError, "#exchange_with must be implemented"
+        raise NotImplementedError, '#exchange_with must be implemented'
       end
 
       # Given two currency strings or object, checks whether they're both the

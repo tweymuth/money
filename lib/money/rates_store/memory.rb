@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Money
   module RatesStore
     # Class for thread-safe storage of exchange rate pairs.
@@ -10,7 +12,7 @@ class Money
     #   # iterates rates
     #   store.each_rate {|iso_from, iso_to, rate| puts "#{from} -> #{to}: #{rate}" }
     class Memory
-      INDEX_KEY_SEPARATOR = '_TO_'.freeze
+      INDEX_KEY_SEPARATOR = '_TO_'
 
       # Initializes a new +Money::RatesStore::Memory+ object.
       #
@@ -18,7 +20,8 @@ class Money
       # @option opts [Boolean] :without_mutex disables the usage of a mutex
       # @param [Hash] rate_data Optional initial exchange rate data.
       def initialize(opts = {}, rate_data = {})
-        @options, @index = opts, rate_data
+        @options = opts
+        @index = rate_data
         @mutex = Mutex.new
         @in_transaction = false
       end

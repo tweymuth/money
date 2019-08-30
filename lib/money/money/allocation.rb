@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 class Money
   class Allocation
@@ -21,12 +21,12 @@ class Money
       result = []
       remaining_amount = amount
 
-      until parts.empty? do
+      until parts.empty?
         parts_sum = parts.inject(0, :+)
         part = parts.pop
 
         current_split = 0
-        if parts_sum > 0
+        if parts_sum.positive?
           current_split = remaining_amount * part / parts_sum
           current_split = current_split.truncate if whole_amounts
         end

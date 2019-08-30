@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples 'instance with custom bank' do |operation, value|
   let(:custom_bank) { Money::Bank::VariableExchange.new }
   let(:instance) { Money.new(1, :usd, custom_bank) }
 
   subject { value ? instance.send(operation, value) : instance.send(operation) }
 
-  it "returns custom bank from new instance" do
+  it 'returns custom bank from new instance' do
     new_money_instances = Array(subject).select { |el| el.is_a?(Money) }
 
     new_money_instances.each do |money_instance|

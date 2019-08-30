@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'money/bank/base'
 require 'money/rates_store/memory'
 require 'json'
@@ -44,8 +46,8 @@ class Money
       attr_reader :mutex, :store
 
       # Available formats for importing/exporting rates.
-      RATE_FORMATS = [:json, :ruby, :yaml].freeze
-      SERIALIZER_SEPARATOR = '_TO_'.freeze
+      RATE_FORMATS = %i[json ruby yaml].freeze
+      SERIALIZER_SEPARATOR = '_TO_'
       FORMAT_SERIALIZERS = { json: JSON, ruby: Marshal, yaml: YAML }.freeze
 
       # Initializes a new +Money::Bank::VariableExchange+ object.
@@ -106,15 +108,13 @@ class Money
         to_currency = Currency.wrap(to_currency)
         if from.currency == to_currency
           from
+        elsif (rate = get_rate(from.currency, to_currency))
+          fractional = calculate_fractional(from, to_currency)
+          from.class.new(
+            exchange(fractional, rate, &block), to_currency
+          )
         else
-          if (rate = get_rate(from.currency, to_currency))
-            fractional = calculate_fractional(from, to_currency)
-            from.class.new(
-              exchange(fractional, rate, &block), to_currency
-            )
-          else
-            raise UnknownRate, "No conversion rate known for '#{from.currency.iso_code}' -> '#{to_currency}'"
-          end
+          raise UnknownRate, "No conversion rate known for '#{from.currency.iso_code}' -> '#{to_currency}'"
         end
       end
       # rubocop:enable Metrics/MethodLength
@@ -220,9 +220,7 @@ class Money
         store.transaction do
           s = FORMAT_SERIALIZERS[format].dump(rates)
 
-          unless file.nil?
-            File.open(file, "w") { |f| f.write(s) }
-          end
+          File.open(file, 'w') { |f| f.write(s) } unless file.nil?
 
           s
         end

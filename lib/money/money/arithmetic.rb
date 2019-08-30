@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Money
   # rubocop:disable Metrics/ModuleLength
   module Arithmetic
@@ -38,7 +40,7 @@ class Money
     def eql?(other)
       if other.is_a?(Money)
         (fractional == other.fractional && currency == other.currency) ||
-          (fractional == 0 && other.fractional == 0)
+          (fractional.zero? && other.fractional.zero?)
       else
         false
       end
@@ -55,28 +57,24 @@ class Money
     #
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def <=>(other)
-      begin
-        unless other.is_a?(Money)
-          return unless other.respond_to?(:zero?) && other.zero?
+      unless other.is_a?(Money)
+        return unless other.respond_to?(:zero?) && other.zero?
 
-          return other.is_a?(CoercedNumeric) ? 0 <=> fractional : fractional <=> 0
-        end
-        return 0 if zero? && other.zero?
-
-        other = other.exchange_to(currency)
-        fractional <=> other.fractional
-      rescue Money::Bank::UnknownRate
-        # Do nothing
+        return other.is_a?(CoercedNumeric) ? 0 <=> fractional : fractional <=> 0
       end
+      return 0 if zero? && other.zero?
+
+      other = other.exchange_to(currency)
+      fractional <=> other.fractional
+    rescue Money::Bank::UnknownRate
+      # Do nothing
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
     # Uses Comparable's implementation but raises ArgumentError if non-zero
     # numeric value is given.
     def ==(other)
-      if other.is_a?(Numeric) && !other.zero?
-        raise ArgumentError, 'Money#== supports only zero numerics'
-      end
+      raise ArgumentError, 'Money#== supports only zero numerics' if other.is_a?(Numeric) && !other.zero?
 
       super
     end
@@ -91,7 +89,7 @@ class Money
     #   Money.new(0).positive?  #=> false
     #   Money.new(-1).positive? #=> false
     def positive?
-      fractional > 0
+      fractional.positive?
     end
 
     # Test if the amount is negative. Returns +true+ if the money amount is
@@ -104,7 +102,7 @@ class Money
     #   Money.new(0).negative?  #=> false
     #   Money.new(1).negative?  #=> false
     def negative?
-      fractional < 0
+      fractional.negative?
     end
 
     # @method +(other)
@@ -131,7 +129,7 @@ class Money
     #
     # @example
     #   Money.new(100) - Money.new(99) #=> #<Money @fractional=1>
-    [:+, :-].each do |op|
+    %i[+ -].each do |op|
       non_zero_message = lambda do |value|
         "Can't add or subtract a non-zero #{value.class.name} value"
       end
@@ -174,11 +172,13 @@ class Money
     #
     def *(other)
       other = other.value if other.is_a?(CoercedNumeric)
+      # rubocop:disable Style/GuardClause
       if other.is_a? Numeric
         self.class.new(fractional * other, currency, bank)
       else
         raise TypeError, "Can't multiply a #{self.class.name} by a #{other.class.name}'s value"
       end
+      # rubocop:enable Style/GuardClause
     end
 
     # Divides the monetary value with the given number and returns a new +Money+
@@ -244,13 +244,13 @@ class Money
       quotient, remainder = fractional.divmod(cents)
       [quotient, self.class.new(remainder, currency, bank)]
     end
-    private :divmod_money
+    private :divmod_money # rubocop:disable Style/AccessModifierDeclarations
 
     def divmod_other(val)
       quotient, remainder = fractional.divmod(as_d(val))
       [self.class.new(quotient, currency, bank), self.class.new(remainder, currency, bank)]
     end
-    private :divmod_other
+    private :divmod_other # rubocop:disable Style/AccessModifierDeclarations
 
     # Equivalent to +self.divmod(val)[1]+
     #
@@ -286,14 +286,12 @@ class Money
     #   Money.new(100).remainder(9) #=> #<Money @fractional=1>
     # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     def remainder(val)
-      if val.is_a?(Money) && currency != val.currency
-        val = val.exchange_to(currency)
-      end
+      val = val.exchange_to(currency) if val.is_a?(Money) && currency != val.currency
 
-      if (fractional < 0 && val < 0) || (fractional > 0 && val > 0)
-        self.modulo(val)
+      if (fractional.negative? && val.negative?) || (fractional.positive? && val.positive?)
+        modulo(val)
       else
-        self.modulo(val) - (val.is_a?(Money) ? val : self.class.new(val, currency, bank))
+        modulo(val) - (val.is_a?(Money) ? val : self.class.new(val, currency, bank))
       end
     end
     # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -316,7 +314,7 @@ class Money
     #   Money.new(100).zero? #=> false
     #   Money.new(0).zero?   #=> true
     def zero?
-      fractional == 0
+      fractional.zero?
     end
 
     # Test if the money amount is non-zero. Returns this money object if it is

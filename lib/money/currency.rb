@@ -1,8 +1,8 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
-require "json"
-require "money/currency/loader"
-require "money/currency/heuristics"
+require 'json'
+require 'money/currency/loader'
+require 'money/currency/heuristics'
 
 class Money
   # Represents a specific currency unit.
@@ -16,8 +16,10 @@ class Money
     extend Money::Currency::Heuristics
 
     # Keeping cached instances in sync between threads
+    # rubocop:disable Style/ClassVars
     @@mutex = Mutex.new
     @@instances = {}
+    # rubocop:enable Style/ClassVars
 
     # Thrown when a Currency has been registered without all the attributes
     # which are required for the current action.
@@ -36,9 +38,7 @@ class Money
     class << self
       def new(id)
         id = id.to_s.downcase
-        unless stringified_keys.include?(id)
-          raise UnknownCurrency, "Unknown currency '#{id}'"
-        end
+        raise UnknownCurrency, "Unknown currency '#{id}'" unless stringified_keys.include?(id)
 
         _instances[id] || @@mutex.synchronize { _instances[id] ||= super }
       end
@@ -81,7 +81,7 @@ class Money
         num = num.to_s.rjust(3, '0')
         return if num.empty?
 
-        id, _ = self.table.find { |_key, currency| currency[:iso_numeric] == num }
+        id, = table.find { |_key, currency| currency[:iso_numeric] == num }
         new(id)
       rescue UnknownCurrency
         nil
@@ -134,9 +134,7 @@ class Money
       def all
         table.keys.map do |curr|
           c = Currency.new(curr)
-          if c.priority.nil?
-            raise MissingAttributeError.new(:all, c.id, :priority)
-          end
+          raise MissingAttributeError.new(:all, c.id, :priority) if c.priority.nil?
 
           c
         end.sort_by(&:priority)
@@ -194,11 +192,11 @@ class Money
       # @return [Boolean] true if the currency previously existed, false
       #   if it didn't.
       def unregister(curr)
-        if curr.is_a?(Hash)
-          key = curr.fetch(:iso_code).downcase.to_sym
-        else
-          key = curr.downcase.to_sym
-        end
+        key = if curr.is_a?(Hash)
+                curr.fetch(:iso_code).downcase.to_sym
+              else
+                curr.downcase.to_sym
+              end
         existed = @table.delete(key)
         @stringified_keys = nil if existed
         existed ? true : false
@@ -256,9 +254,9 @@ class Money
                 :disambiguate_symbol, :html_entity, :subunit, :subunit_to_unit, :decimal_mark,
                 :thousands_separator, :symbol_first, :smallest_denomination
 
-    alias_method :separator, :decimal_mark
-    alias_method :delimiter, :thousands_separator
-    alias_method :eql?, :==
+    alias separator decimal_mark
+    alias delimiter thousands_separator
+    alias eql? ==
 
     # Create a new +Currency+ object.
     #
@@ -289,10 +287,10 @@ class Money
     #   c1 <=> c1 #=> 0
     def <=>(other)
       # <=> returns nil when one of the values is nil
-      comparison = self.priority <=> other.priority || 0
+      comparison = priority <=> other.priority || 0
 
-      if comparison == 0
-        self.id <=> other.id
+      if comparison.zero?
+        id <=> other.id
       else
         comparison
       end
@@ -311,7 +309,7 @@ class Money
     #   c1 == c1 #=> true
     #   c1 == c2 #=> false
     def ==(other)
-      self.equal?(other) || compare_ids(other)
+      equal?(other) || compare_ids(other)
     end
 
     def compare_ids(other_currency)
@@ -320,9 +318,9 @@ class Money
                           else
                             other_currency.to_s.downcase
                           end
-      self.id.to_s.downcase == other_currency_id
+      id.to_s.downcase == other_currency_id
     end
-    private :compare_ids
+    private :compare_ids # rubocop:disable Style/AccessModifierDeclarations
 
     # Returns a Integer hash value based on the +id+ attribute in order to use
     # functions like & (intersection), group_by, etc.
@@ -404,7 +402,7 @@ class Money
     end
 
     def symbol_first?
-      !!@symbol_first
+      @symbol_first
     end
 
     # Returns if a code currency is ISO.
