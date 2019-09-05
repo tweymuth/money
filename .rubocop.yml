@@ -33,6 +33,8 @@ Security:
 
 Style:
   Enabled: true
+Style/ExpandPathArguments:
+  Enabled: false
 Style/NumericLiterals:
   Enabled: false
 Style/Documentation:
