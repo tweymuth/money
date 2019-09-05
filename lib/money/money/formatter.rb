@@ -374,7 +374,7 @@ class Money
     def lookup(key)
       return rules[key] || DEFAULTS[key] if rules.key?(key)
 
-      (Money.locale_backend&.lookup(key, currency)) || DEFAULTS[key]
+      (Money.locale_backend && Money.locale_backend.lookup(key, currency)) || DEFAULTS[key]
     end
 
     def regexp_format
